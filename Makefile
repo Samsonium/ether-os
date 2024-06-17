@@ -41,12 +41,12 @@ all: clean prepare ${OBJ} run
 
 # Cleanup fs
 clean:
-	rm -rf $(build)
+	@rm -rf $(build)
 
 # Prepare project
 prepare:
 	@echo "-> Preparing"
-	mkdir -p $(build)
+	@mkdir -p $(build)
 
 # Run emulator
 run: $(os)
