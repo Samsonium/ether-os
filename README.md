@@ -1,6 +1,8 @@
 # EtherOS
 EtherOS is an experimental operating system based on i386.
 
+![Screenshot of actual version](docs/actual.png)
+
 The goal of this project is to create OS with graphics server
 that works as web browser and shell as web application.
 
