@@ -1,6 +1,7 @@
 #include "cmd.h"
 #include "../libc/string.h"
 #include "../drivers/screen.h"
+#include "../drivers/vga.h"
 #include "../libc/mem.h"
 
 void cmd_help()
@@ -37,6 +38,11 @@ void cmd_page()
     kprint("\n", 0x00);
 }
 
+void cmd_vga_test()
+{
+    vga_test();
+}
+
 void cmd_exec(char *input)
 {
     if (strcmp(input, "HELP") == 0)
@@ -48,6 +54,8 @@ void cmd_exec(char *input)
     }
     else if (strcmp(input, "PAGE") == 0)
         cmd_page();
+    else if (strcmp(input, "VGA") == 0)
+        cmd_vga_test();
     else
     {
         kprint("Unknown command. Type HELP to list available commands\n", get_color(RED, BLACK));
