@@ -2,6 +2,8 @@
 #include "../drivers/screen.h"
 #include "kernel.h"
 #include "../libc/string.h"
+#include "../libc/mem.h"
+#include "cmd.h"
 
 void kmain()
 {
@@ -15,14 +17,5 @@ void kmain()
 
 void user_input(char *input)
 {
-	if (strcmp(input, "END") == 0)
-	{
-		kprint("Stopping the CPU. Bye-bye!\n", get_color(BLACK, WHITE));
-		asm volatile("hlt");
-	}
-
-	char color = get_color(WHITE, BLACK);
-	kprint("You said: ", color);
-	kprint(input, color);
-	kprint("\n> ", get_color(L_CYAN, BLACK));
+	cmd_exec(input);
 }
