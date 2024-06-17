@@ -1,6 +1,7 @@
 #include "cmd.h"
 #include "../libc/string.h"
 #include "../drivers/screen.h"
+#include "../libc/mem.h"
 
 void cmd_help()
 {
