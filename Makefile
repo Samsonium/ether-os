@@ -63,7 +63,7 @@ $(os): $(boot) $(kern)
 #
 
 # Make kernel binary
-$(kern): $(kern_e_out) $(kern_in) $(kern_i_out)
+$(kern): $(kern_e_out) $(kern_i_out) $(kern_in)
 	@echo "-> Building kernel.bin"
 	@$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary --allow-multiple-definition
 
