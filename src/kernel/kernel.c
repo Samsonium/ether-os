@@ -11,7 +11,7 @@ void kmain()
 	irq_install();
 
 	clear_screen();
-	kprint("Welcome to SmthOS! Write something. Type \"END\" to halt the CPU", get_color(L_GREEN, BLACK));
+	kprint("Welcome to EtherOS! Write something. Type \"END\" to halt the CPU", get_color(L_GREEN, BLACK));
 	kprint("\n> ", get_color(L_CYAN, BLACK));
 }
 
