@@ -9,10 +9,11 @@ void cmd_help()
     char color = get_color(WHITE, BLACK);
 
     kprint("Help:\n", color);
-    kprint(" - END - begin cpu halt\n", color);
-    kprint(" - PAGE - allocate some memory\n", color);
-    kprint(" - VGA - enter VGA mode\n", color);
-    kprint(" - HELP - list available commands\n\n", color);
+    kprint(" - end - begin cpu halt. This action will stop OS execution\n", color);
+    kprint(" - page - allocate some memory and display page and physcial address\n", color);
+    kprint(" - vga - enter VGA mode. Reboot to return back\n", color);
+    kprint(" - clear - clears the screen\n", color);
+    kprint(" - help - list available commands\n\n", color);
 }
 
 void cmd_end()
@@ -41,22 +42,38 @@ void cmd_page()
 
 void cmd_vga_test()
 {
-    vga_test();
+    int err_code = vga_set_mode(320, 200, 8);
+    if (err_code != 0)
+    {
+        kprint("Cannot init VGA\n", get_color(RED, BLACK));
+        return;
+    }
+
+    for (u32 y = 0; y < 200; y++)
+        for (u32 x = 0; x < 320; x++)
+            vga_putpixel_c(x, y, 0x00, 0x00, 0xA8);
+}
+
+void cmd_clear()
+{
+    clear_screen();
 }
 
 void cmd_exec(char *input)
 {
-    if (strcmp(input, "HELP") == 0)
+    if (strcmp(input, "help") == 0)
         cmd_help();
-    else if (strcmp(input, "END") == 0)
+    else if (strcmp(input, "end") == 0)
     {
         cmd_end();
         return;
     }
-    else if (strcmp(input, "PAGE") == 0)
+    else if (strcmp(input, "page") == 0)
         cmd_page();
-    else if (strcmp(input, "VGA") == 0)
+    else if (strcmp(input, "vga") == 0)
         cmd_vga_test();
+    else if (strcmp(input, "clear") == 0)
+        cmd_clear();
     else
     {
         kprint("Unknown command. Type HELP to list available commands\n", get_color(RED, BLACK));
