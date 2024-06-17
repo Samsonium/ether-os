@@ -34,7 +34,7 @@ load_kernel:
 	ret
 
 [bits 32]
-BEGIN_PM:	
+BEGIN_PM:
 	call KERNEL_OFFSET
 	jmp $
 
