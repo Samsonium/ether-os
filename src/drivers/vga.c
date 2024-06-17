@@ -101,8 +101,7 @@ u8 *get_framebuffer_segment()
 
 u8 vga_get_color_index(u8 r, u8 g, u8 b)
 {
-    if (r == 0x00 && g == 0x00 && b == 0xA8)
-        return 0x01;
+    return (r * 6 / 256) * 36 + (g * 6 / 256) * 6 + (b * 6 / 256);
 }
 
 void vga_putpixel(u32 x, u32 y, u8 color_index)
@@ -114,4 +113,22 @@ void vga_putpixel(u32 x, u32 y, u8 color_index)
 void vga_putpixel_c(u32 x, u32 y, u8 r, u8 g, u8 b)
 {
     vga_putpixel(x, y, vga_get_color_index(r, g, b));
+}
+
+void vga_fillrect(u32 x, u32 y, u32 w, u32 h, u8 color_index)
+{
+    for (u32 _y = y; _y < h + y; _y++)
+        for (u32 _x = x; _x < w + x; _x++)
+            vga_putpixel(_x, _y, color_index);
+}
+
+void vga_welcome()
+{
+    char str[] = "Welcome to EtherOS VGA";
+    u32 char_w = 22 * 8;
+    u32 char_h = 8;
+
+    u32 ix = 320 / 2 - (char_w + 20) / 2;
+    u32 iy = 200 / 2 - (char_h + 20) / 2;
+    vga_fillrect(ix, iy, char_w + 20, char_h + 20, 0x07);
 }

@@ -25,4 +25,7 @@ u8 vga_get_color_index(u8 r, u8 g, u8 b);
 void vga_putpixel(u32 x, u32 y, u8 color_index);
 void vga_putpixel_c(u32 x, u32 y, u8 r, u8 g, u8 b);
 
+void vga_fillrect(u32 x, u32 y, u32 w, u32 h, u8 color_index);
+void vga_welcome();
+
 #endif
