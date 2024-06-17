@@ -51,7 +51,7 @@ prepare:
 # Run emulator
 run: $(os)
 	@echo "-> Running emulator"
-	qemu-system-i386 -drive format=raw,file=$<
+	qemu-system-i386 -drive format=raw,file=$< -vga std
 
 # Build OS image
 $(os): $(boot) $(kern)
