@@ -49,9 +49,8 @@ void cmd_vga_test()
         return;
     }
 
-    for (u32 y = 0; y < 200; y++)
-        for (u32 x = 0; x < 320; x++)
-            vga_putpixel_c(x, y, 0x00, 0x00, 0xA8);
+    vga_fillrect(0, 0, 320, 200, 0x03);
+    vga_welcome();
 }
 
 void cmd_clear()
