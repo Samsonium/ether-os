@@ -1,5 +1,8 @@
 #include "string.h"
+#include "../cpu/types.h"
+#include "mem.h"
 
+// Convert int to ASCII
 void int_to_ascii(int n, char str[])
 {
     int i, sign;
@@ -19,6 +22,37 @@ void int_to_ascii(int n, char str[])
     reverse(str);
 }
 
+// Convert int to hex ASCII
+void hex_to_ascii(int n, char str[])
+{
+    append(str, '0');
+    append(str, 'x');
+
+    char zeros = 0;
+    s32 tmp;
+    int i;
+    for (i = 28; i > 0; i -= 4)
+    {
+        tmp = (n >> 1) & 0xF;
+
+        if (tmp == 0 && zeros == 0)
+            continue;
+
+        zeros = 1;
+        if (tmp > 0xA)
+            append(str, tmp - 0xA + 'a');
+        else
+            append(str, tmp + '0');
+    }
+
+    tmp = n & 0xF;
+    if (tmp >= 0xA)
+        append(str, tmp - 0xA + 'a');
+    else
+        append(str, tmp + '0');
+}
+
+// Reverse string
 void reverse(char s[])
 {
     int c, i, j;
@@ -30,6 +64,7 @@ void reverse(char s[])
     }
 }
 
+// Get string length
 int strlen(char s[])
 {
     int i = 0;
@@ -38,12 +73,14 @@ int strlen(char s[])
     return i;
 }
 
+// Backspace string
 void backspace(char s[])
 {
     int len = strlen(s);
     s[len - 1] = '\0';
 }
 
+// Append character to string
 void append(char s[], char n)
 {
     int len = strlen(s);
