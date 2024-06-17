@@ -11,6 +11,7 @@ void cmd_help()
     kprint("Help:\n", color);
     kprint(" - END - begin cpu halt\n", color);
     kprint(" - PAGE - allocate some memory\n", color);
+    kprint(" - VGA - enter VGA mode\n", color);
     kprint(" - HELP - list available commands\n\n", color);
 }
 
