@@ -48,6 +48,8 @@ u8 *get_framebuffer_segment();
 
 void vga_putpixel(u32 x, u32 y, u8 color_index);
 void vga_fillrect(u32 x, u32 y, u32 w, u32 h, u8 color_index);
+void vga_drawchar(u8 c, u32 x, u32 y, u8 color_index);
+void vga_drawstr(u8 s[], u32 x, u32 y, u8 color_index);
 void vga_welcome();
 
 #endif

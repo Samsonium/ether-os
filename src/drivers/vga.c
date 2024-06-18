@@ -1,4 +1,5 @@
 #include "vga.h"
+#include "font.h"
 #include "../cpu/ports.h"
 
 void write_registers(u8 *registers)
@@ -129,13 +130,59 @@ void vga_fillrect(u32 x, u32 y, u32 w, u32 h, u8 color_index)
             vga_putpixel(_x, _y, color_index);
 }
 
+void vga_drawchar(u8 c, u32 x, u32 y, u8 color_index)
+{
+    u32 cx, cy;
+    PSF_Font *font = (PSF_Font *)&_binary_src_drivers_gr8x16_psf_start;
+    int bytesperline = (font->width + 7) / 8;
+    if (unicode != NULL)
+    {
+        c = unicode[c];
+    }
+
+    u8 *glyph =
+        (u8 *)&_binary_src_drivers_gr8x16_psf_start +
+        font->headersize +
+        (c > 0 && c < font->numglyph ? c : 0) * font->bytesperglyph;
+
+    int offs =
+        (cy * font->height * 320) +
+        (cx * (font->width + 1) * sizeof(u32));
+
+    u32 line, mask;
+    for (cy = 0; cy < font->height; cy++)
+    {
+        line = offs;
+        mask = 1 << (font->width - 1);
+        for (cx = 0; cx < font->width; cx++)
+        {
+            vga_putpixel(cx, cy, *((u32 *)glyph) & mask ? color_index : 0x0);
+            mask >>= 1;
+            line += sizeof(u32);
+        }
+        glyph += bytesperline;
+        offs += 320;
+    }
+}
+
+void vga_drawstr(u8 *c, u32 x, u32 y, u8 color_index)
+{
+    int i = 0;
+    while (*c != '\0')
+    {
+        vga_drawchar(*c, x + x * i, y, color_index);
+
+        i++;
+        *c++;
+    }
+}
+
 void vga_welcome()
 {
     for (s32 y = 0; y < 480; y++)
         for (s32 x = 0; x < 320; x++)
             vga_putpixel(x, y, 0x0);
 
-    u32 ix = 320 / 2 - (char_w + 20) / 2;
-    u32 iy = 200 / 2 - (char_h + 20) / 2;
-    vga_fillrect(ix, iy, char_w + 20, char_h + 20, 0x07);
+    vga_fillrect(320 / 2 - 32, 200 / 2 - 8, 64, 16, 0x7);
+    vga_drawstr("Ether OS", 320 / 2 - 4, 240 / 2 - 1, 0x3F);
 }
