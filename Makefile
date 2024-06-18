@@ -52,7 +52,7 @@ after:
 # Run emulator
 run: $(os) after
 	@echo "-> Running emulator"
-	qemu-system-i386 -drive format=raw,file=$< -vga std
+	qemu-system-x86_64 -drive format=raw,file=$< -vga std -display sdl
 
 # Build OS image
 $(os): $(boot) $(kern)
