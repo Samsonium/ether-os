@@ -38,10 +38,27 @@ void write_registers(u8 *registers)
     // AC
     for (int i = 0; i < 21; i++)
     {
-        (void *)port_byte_in(VGA_AC_RESET);
+        port_byte_in(VGA_AC_RESET);
         port_byte_out(VGA_AC_INDEX, i);
         port_byte_out(VGA_AC_WRITE, *(registers++));
     }
+
+    port_byte_out(VGA_PALETTE_MASK, 0xFF);
+    port_byte_out(VGA_PALETTE_WRITE, 0);
+
+    for (int i = 0; i < 0xFF; i++)
+    {
+        int r = (i >> 6) & 0x3F;
+        int g = (i >> 3) & 0x3F;
+        int b = (i >> 0) & 0x3F;
+
+        port_byte_out(VGA_PALETTE_WRITE, i);
+        port_byte_out(VGA_PALETTE_DATA, r);
+        port_byte_out(VGA_PALETTE_DATA, g);
+        port_byte_out(VGA_PALETTE_DATA, b);
+    }
+
+    port_byte_out(VGA_PALETTE_WRITE, 0);
 
     port_byte_in(VGA_AC_READ);
     port_byte_out(VGA_AC_INDEX, 0x20);
@@ -99,20 +116,10 @@ u8 *get_framebuffer_segment()
     }
 }
 
-u8 vga_get_color_index(u8 r, u8 g, u8 b)
-{
-    return (r * 6 / 256) * 36 + (g * 6 / 256) * 6 + (b * 6 / 256);
-}
-
 void vga_putpixel(u32 x, u32 y, u8 color_index)
 {
     u8 *pixelAddress = get_framebuffer_segment() + 320 * y + x;
     *pixelAddress = color_index;
-}
-
-void vga_putpixel_c(u32 x, u32 y, u8 r, u8 g, u8 b)
-{
-    vga_putpixel(x, y, vga_get_color_index(r, g, b));
 }
 
 void vga_fillrect(u32 x, u32 y, u32 w, u32 h, u8 color_index)
@@ -124,9 +131,9 @@ void vga_fillrect(u32 x, u32 y, u32 w, u32 h, u8 color_index)
 
 void vga_welcome()
 {
-    char str[] = "Welcome to EtherOS VGA";
-    u32 char_w = 22 * 8;
-    u32 char_h = 8;
+    for (s32 y = 0; y < 480; y++)
+        for (s32 x = 0; x < 320; x++)
+            vga_putpixel(x, y, 0x0);
 
     u32 ix = 320 / 2 - (char_w + 20) / 2;
     u32 iy = 200 / 2 - (char_h + 20) / 2;
