@@ -2,7 +2,7 @@
 #include "../libc/string.h"
 #include "../drivers/screen.h"
 #include "../drivers/vga.h"
-#include "../libc/mem.h"
+#include "../cpu/kheap.h"
 
 void cmd_help()
 {
@@ -24,7 +24,7 @@ void cmd_end()
 
 void cmd_page()
 {
-    void *page = kern_malloc(10);
+    u32 page = kmalloc(10);
 
     char page_str[16] = "";
     hex_to_ascii(page, page_str);
