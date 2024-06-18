@@ -24,19 +24,13 @@ void cmd_end()
 
 void cmd_page()
 {
-    u32 phys_addr;
-    u32 page = kmalloc(10, 1, &phys_addr);
+    void *page = kern_malloc(10);
 
     char page_str[16] = "";
     hex_to_ascii(page, page_str);
 
-    char phys_str[16] = "";
-    hex_to_ascii(phys_addr, phys_str);
-
     kprint("Page: ", get_color(WHITE, BLACK));
     kprint(page_str, get_color(L_GREEN, BLACK));
-    kprint(", physical address: ", get_color(WHITE, BLACK));
-    kprint(phys_str, get_color(L_GREEN, BLACK));
     kprint("\n", 0x00);
 }
 
