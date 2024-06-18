@@ -3,8 +3,8 @@
 
 #include "../cpu/types.h"
 
-extern char _binary_src_drivers_gr8x16_psf_start;
-extern char _binary_src_drivers_gr8x16_psf_end;
+char _binary___src_drivers_gr8x16_psf_start;
+char _binary___src_drivers_gr8x16_psf_end;
 
 u32 *unicode;
 

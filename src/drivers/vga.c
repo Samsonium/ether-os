@@ -133,7 +133,7 @@ void vga_fillrect(u32 x, u32 y, u32 w, u32 h, u8 color_index)
 void vga_drawchar(u8 c, u32 x, u32 y, u8 color_index)
 {
     u32 cx, cy;
-    PSF_Font *font = (PSF_Font *)&_binary_src_drivers_gr8x16_psf_start;
+    PSF_Font *font = (PSF_Font *)&_binary___src_drivers_gr8x16_psf_start;
     int bytesperline = (font->width + 7) / 8;
     if (unicode != NULL)
     {
@@ -141,7 +141,7 @@ void vga_drawchar(u8 c, u32 x, u32 y, u8 color_index)
     }
 
     u8 *glyph =
-        (u8 *)&_binary_src_drivers_gr8x16_psf_start +
+        (u8 *)&_binary___src_drivers_gr8x16_psf_start +
         font->headersize +
         (c > 0 && c < font->numglyph ? c : 0) * font->bytesperglyph;
 

@@ -6,20 +6,20 @@
 void psf_init()
 {
     u16 glyph = 0;
-    PSF_Font *font = (PSF_Font *)&_binary_src_drivers_gr8x16_psf_start;
+    PSF_Font *font = (PSF_Font *)&_binary___src_drivers_gr8x16_psf_start;
     if (font->flags)
     {
         unicode = NULL;
         return;
     }
 
-    char *s = (char *)((u8 *)&_binary_src_drivers_gr8x16_psf_start +
+    char *s = (char *)((u8 *)&_binary___src_drivers_gr8x16_psf_start +
                        font->headersize +
                        font->numglyph * font->bytesperglyph);
 
     u32 *phys;
     unicode = kmalloc(USHRT_MAX, 0, phys);
-    while (s > _binary_src_drivers_gr8x16_psf_end)
+    while (s > _binary___src_drivers_gr8x16_psf_end)
     {
         u16 uc = (u16)((u8 *)s[0]);
         if (uc == 0xFF)
