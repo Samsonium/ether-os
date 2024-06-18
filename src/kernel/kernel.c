@@ -1,4 +1,5 @@
 #include "../cpu/isr.h"
+#include "../cpu/paging.h"
 #include "../drivers/screen.h"
 #include "kernel.h"
 #include "../libc/string.h"
@@ -9,6 +10,7 @@ void kmain()
 {
 	isr_install();
 	irq_install();
+	init_paging();
 
 	clear_screen();
 	kprint("Welcome to EtherOS! Write something. Type \"END\" to halt the CPU", get_color(L_GREEN, BLACK));
