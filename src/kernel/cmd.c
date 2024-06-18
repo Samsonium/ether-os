@@ -49,7 +49,6 @@ void cmd_vga_test()
         return;
     }
 
-    vga_fillrect(0, 0, 320, 200, 0x03);
     vga_welcome();
 }
 
