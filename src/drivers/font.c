@@ -17,8 +17,7 @@ void psf_init()
                        font->headersize +
                        font->numglyph * font->bytesperglyph);
 
-    u32 *phys;
-    unicode = kmalloc(USHRT_MAX, 0, phys);
+    unicode = kern_calloc(USHRT_MAX, 2);
     while (s > _binary___src_drivers_gr8x16_psf_end)
     {
         u16 uc = (u16)((u8 *)s[0]);
