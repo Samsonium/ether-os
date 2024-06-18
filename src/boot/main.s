@@ -28,13 +28,13 @@ load_kernel:
 	call print_nl
 
 	mov bx, KERNEL_OFFSET
-	mov dh, 16
+	mov dh, 32
 	mov dl, [BOOT_DRIVE]
 	call disk_load
 	ret
 
 [bits 32]
-BEGIN_PM:	
+BEGIN_PM:
 	call KERNEL_OFFSET
 	jmp $
 

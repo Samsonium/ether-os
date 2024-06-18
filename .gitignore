@@ -8,3 +8,6 @@
 !/.gitignore
 !/Makefile
 !/README.md
+
+# Exclude .o
+/**/*.o

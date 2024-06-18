@@ -1,19 +1,11 @@
-C_SOURCES = $(wildcard src/kernel/*.c src/drivers/*.c src/cpu/*.c src/libc/*.c)
-C_HEADERS = $(wildcard src/kernel/*.h src/drivers/*.h src/cpu/*.h src/libc/*.h)
-OBJ = ${C_SOURCES:.c=.o}
-
 # Compiler and linker
 CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
 LD = /usr/local/i386elfgcc/bin/i386-elf-ld
 CFLAGS = -g -ffreestanding
 
 # Dirs
-build	 	= ./build
-cpu_src		= ./src/cpu
-libc_src 	= ./src/libc
-boot_src 	= ./src/boot
-kern_src 	= ./src/kernel
-drivers_src = ./src/drivers
+src = ./src
+build = ./build
 
 # Bin
 boot = $(build)/boot.bin
@@ -21,66 +13,79 @@ kern = $(build)/kernel.bin
 os	 = $(build)/os.bin
 
 # Kernel
-kern_in    	= $(wildcard $(build)/*.o)
-kern_h		= $(wildcard $(kern_src)/*.h $(drivers_src)/*.h $(cpu_src)/*.h $(libc_src)/*.h)
-kern_c 		= $(wildcard $(kern_src)/*.c $(drivers_src)/*.c $(cpu_src)/*.c $(libc_src)/*.c)
-kern_e	    = $(kern_src)/kentry.s
-kern_e_out	= $(build)/kentry.o
-kern_i 		= $(cpu_src)/interrupt.asm
-kern_i_out	= $(build)/interrupt.o
+kern_in = $(wildcard $(build)/*.o)
+kern_entry = $(src)/kernel/kentry.s
 
 # Boot
-boot_s = $(boot_src)/main.s
+boot_s = $(src)/boot/main.s
+
+# Sources paths
+subdirs := cpu libc kernel drivers
+S_SOURCE := $(foreach dir, $(subdirs), $(wildcard $(src)/$(dir)/*.s))
+S_SOURCE := $(kern_entry) $(filter-out ${kern_entry}, $(S_SOURCE))
+C_SOURCE := $(foreach dir, $(subdirs), $(wildcard $(src)/$(dir)/*.c))
+C_HEADERS := $(foreach dir, $(subdirs), $(wildcard $(src)/$(dir)/*.h))
+ASM := ${S_SOURCE:.s=.o}
+OBJ := ${C_SOURCE:.c=.o}
 
 #
 # =================== [ Jobs ] ===================
 #
 
 # Run all jobs
-all: clean prepare ${OBJ} run
+all: clean prepare run
 
 # Cleanup fs
 clean:
-	rm -rf $(build)
+	@rm -rf $(build)
+	@rm -rf $(src)/**/*.o
 
 # Prepare project
 prepare:
 	@echo "-> Preparing"
-	mkdir -p $(build)
+	@mkdir -p $(build)
+
+after:
+	@echo "-> Removing temp files"
+	@rm -rf $(src)/**/*.o
 
 # Run emulator
-run: $(os)
+run: $(os) after
 	@echo "-> Running emulator"
-	qemu-system-i386 -fda $<
+	qemu-system-x86_64 -drive format=raw,file=$< -vga std -display sdl
 
 # Build OS image
 $(os): $(boot) $(kern)
 	@echo "-> Writing OS image"
-	@cat $^ > $@
+	@cat $(boot) $(kern) > $@
 
 #
 # === [ Kernel ] ===
 #
 
+define copy_font
+	@if [ "$1" = "font.o" ]; then \
+		echo "-> Copying font gr8x16.psf to $1"; \
+		objcopy -O elf32-i386 -B i386 -I binary $(src)/drivers/gr8x16.psf $2; \
+	fi
+endef
+
 # Make kernel binary
-$(kern): $(kern_e_out) $(kern_in) $(kern_i_out)
+$(kern): ${ASM} ${OBJ}
 	@echo "-> Building kernel.bin"
+	@echo "-> Source:" $^
 	@$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary --allow-multiple-definition
+
+# Build each .s
+$(ASM):%.o:%.s
+	@echo "-> Compiling" $(@F)
+	@nasm $< -f elf -o $@
 
 # Build each .c
 $(OBJ):%.o:%.c ${C_HEADERS}
-	@echo "-> Building" $(@F)
-	@$(CC) $(CFLAGS) -c $< -o $(build)/$(@F)
-
-# Build kernel entry
-$(kern_e_out): $(kern_e)
-	@echo "-> Compiling kernel entry"
-	@nasm $< -f elf -o $@
-
-# Build interrupts assembly code
-$(kern_i_out): $(kern_i)
-	@echo "-> Compiling interrupts"
-	@nasm $< -f elf -o $@
+	@echo "-> Compiling" $(@F)
+	@$(CC) $(CFLAGS) -c $< -o $@
+	$(call copy_font,$(@F),$@)
 
 #
 # === [ Bootsector ] ===

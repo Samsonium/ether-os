@@ -1,6 +1,8 @@
 #include "isr.h"
 #include "idt.h"
+#include "../libc/string.h"
 #include "../drivers/screen.h"
+#include "../drivers/keyboard.h"
 #include "ports.h"
 #include "timer.h"
 #include "ports.h"
@@ -113,12 +115,14 @@ char *exception_messages[] = {
 
 void isr_handler(registers_t r)
 {
-	kprint("received interrupt: ", 0x0F);
 	char s[3];
 	int_to_ascii(r.int_no, s);
-	kprint(s, 0x0F);
-	kprint("\n", 0x0F);
-	kprint(exception_messages[r.int_no], 0x0F);
+
+	kprint("[", get_color(RED, WHITE));
+	kprint(s, get_color(RED, WHITE));
+	kprint("]: ", get_color(RED, WHITE));
+	kprint(" ", get_color(RED, L_GREY));
+	kprint(exception_messages[r.int_no], get_color(RED, L_GREY));
 	kprint("\n", 0x0F);
 }
 
