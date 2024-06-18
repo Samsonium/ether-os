@@ -32,6 +32,9 @@ kern_i_out	= $(build)/interrupt.o
 # Boot
 boot_s = $(boot_src)/main.s
 
+# vars
+objcopy_target = 
+
 #
 # =================== [ Jobs ] ===================
 #
@@ -56,21 +59,32 @@ run: $(os)
 # Build OS image
 $(os): $(boot) $(kern)
 	@echo "-> Writing OS image"
-	@cat $^ > $@
+	@cat $(bool) $(kern) > $@
 
 #
 # === [ Kernel ] ===
 #
+
+define copy_font
+	@if [ "$1" = "font.o" ]; then \
+		echo "-> Copying font $(drivers_src)/gr8x16.psf to $1"; \
+		objcopy -O elf64-x86-64 -B i386 -I binary $(drivers_src)/gr8x16.psf $1; \
+	fi
+endef
 
 # Make kernel binary
 $(kern): $(kern_e_out) $(kern_i_out) $(kern_in)
 	@echo "-> Building kernel.bin"
 	@$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary --allow-multiple-definition
 
+include_font: $(drivers_src)/gr8x16.psf
+	@objcopy -O elf64-x86-64 -B i386 -I binary $< $(objcopy_target)
+
 # Build each .c
 $(OBJ):%.o:%.c ${C_HEADERS}
 	@echo "-> Building" $(@F)
 	@$(CC) $(CFLAGS) -c $< -o $(build)/$(@F)
+	$(call copy_font,$(@F))
 
 # Build kernel entry
 $(kern_e_out): $(kern_e)
