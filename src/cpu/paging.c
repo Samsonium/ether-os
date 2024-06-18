@@ -1,22 +1,31 @@
 #include "paging.h"
+#include "../drivers/screen.h"
+
+extern void enable_paging(u32 *);
+
+u32 page_directory[NUM_PAGES] __attribute__((aligned(PAGE_FRAME_SIZE)));
+u32 page_table[NUM_PAGES] __attribute__((aligned(PAGE_FRAME_SIZE)));
 
 void init_paging()
 {
-    unsigned long address = 0;
-    unsigned int i;
+    s32 i;
 
-    for (i = 0; i < 1024; i++)
-    {
-        page_table[i] = address | 3;
-        address = address + 4096;
-    }
+    // Create page directory (supervisor mode) in RW not present mode (0x010 == 2)
+    for (i = 0; i < NUM_PAGES; i++)
+        page_directory[i] = 0x00000002;
 
-    page_directory[0] = page_table;
-    page_directory[0] = page_directory[0] | 3;
+    // Create page table (supervisor mode) in RW present mode (0x011 == 3)
+    for (i = 0; i < NUM_PAGES; i++)
+        page_table[i] = (i * 0x1000) | 3;
 
-    for (i = 1; i < 1024; i++)
-        page_directory[i] = 0 | 2;
+    // Put page table into page directory supervisor level, RW present
+    page_directory[0] = ((s32)page_table) | 3;
 
-    write_cr3(page_directory);
-    write_cr0(read_cr0() | 0x80000000);
+    enable_paging(page_directory);
+}
+
+void page_fault()
+{
+    char msg[] = "Page error";
+    kprint(msg, get_color(RED, BLACK));
 }
