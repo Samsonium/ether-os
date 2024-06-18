@@ -8,4 +8,27 @@ void memory_set(u8 *dest, u8 val, u32 len);
 
 u32 kmalloc(u32 size, int align, u32 *phys_addr);
 
+struct boundary_tag
+{
+    u32 magic;
+    u32 size;
+    u32 real_size;
+    s32 index;
+
+    struct boundary_tag *split_left;
+    struct boundary_tag *split_right;
+
+    struct boundary_tag *next;
+    struct boundary_tag *prev;
+};
+
+extern s32 liballoc_lock();
+extern s32 liballoc_unlock();
+extern s32 liballoc_free();
+
+void *kern_malloc(size_t);
+void *kern_realloc(void *, size_t);
+void *kern_calloc(size_t, size_t);
+void kern_free(void *);
+
 #endif
