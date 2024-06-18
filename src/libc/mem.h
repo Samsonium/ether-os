@@ -25,6 +25,7 @@ struct boundary_tag
 extern s32 liballoc_lock();
 extern s32 liballoc_unlock();
 extern s32 liballoc_free();
+extern s32 liballoc_alloc();
 
 void *kern_malloc(size_t);
 void *kern_realloc(void *, size_t);
