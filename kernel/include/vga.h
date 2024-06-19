@@ -1,7 +1,7 @@
 #ifndef VGA_H
 #define VGA_H
 
-#include "../cpu/types.h"
+#include "types.h"
 
 #define VGA_MISC 0x3C2
 #define VGA_CRTC_INDEX 0x3D4

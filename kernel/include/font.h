@@ -1,7 +1,7 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include "../cpu/types.h"
+#include "types.h"
 
 char _binary___src_drivers_gr8x16_psf_start;
 char _binary___src_drivers_gr8x16_psf_end;

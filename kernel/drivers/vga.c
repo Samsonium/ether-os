@@ -1,6 +1,6 @@
-#include "vga.h"
-#include "font.h"
-#include "../cpu/ports.h"
+#include "../include/vga.h"
+#include "../include/font.h"
+#include "../include/ports.h"
 
 void write_registers(u8 *registers)
 {

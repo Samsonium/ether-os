@@ -1,6 +1,6 @@
-#include "string.h"
-#include "../cpu/types.h"
-#include "mem.h"
+#include "../include/string.h"
+#include "../include/types.h"
+#include "../include/mem.h"
 
 // Convert int to ASCII
 void int_to_ascii(int n, char str[])

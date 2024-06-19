@@ -1,4 +1,4 @@
-#include "vesa.h"
+#include "../include/vesa.h"
 
 #define VESA_MEM_START 0x100000
 

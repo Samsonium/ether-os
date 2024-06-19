@@ -1,4 +1,4 @@
-#include "mem.h"
+#include "../include/mem.h"
 
 //
 // Code partially taken from https://github.com/blanham/liballoc/blob/master/liballoc.c

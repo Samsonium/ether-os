@@ -1,5 +1,5 @@
-#include "paging.h"
-#include "../drivers/screen.h"
+#include "../include/paging.h"
+#include "../include/screen.h"
 
 extern void enable_paging(u32 *);
 

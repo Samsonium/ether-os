@@ -1,7 +1,7 @@
 #ifndef VESA_H
 #define VESA_H
 
-#include "../cpu/types.h"
+#include "types.h"
 
 #define VESA_CHECK_MAGIC 0xDEADBEEF
 

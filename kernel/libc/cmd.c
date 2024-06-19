@@ -1,8 +1,8 @@
-#include "cmd.h"
-#include "../libc/string.h"
-#include "../drivers/screen.h"
-#include "../drivers/vga.h"
-#include "../cpu/kheap.h"
+#include "../include/cmd.h"
+#include "../include/string.h"
+#include "../include/screen.h"
+#include "../include/vga.h"
+#include "../include/kheap.h"
 
 void cmd_help()
 {

@@ -1,11 +1,11 @@
-#include "isr.h"
-#include "idt.h"
-#include "../libc/string.h"
-#include "../drivers/screen.h"
-#include "../drivers/keyboard.h"
-#include "ports.h"
-#include "timer.h"
-#include "ports.h"
+#include "../include/isr.h"
+#include "../include/idt.h"
+#include "../include/string.h"
+#include "../include/screen.h"
+#include "../include/keyboard.h"
+#include "../include/ports.h"
+#include "../include/timer.h"
+#include "../include/ports.h"
 
 isr_t interrupt_handlers[256];
 

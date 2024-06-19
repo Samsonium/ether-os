@@ -14,12 +14,12 @@ KERNEL_OFFSET equ 0x1000 ; set on linking in -Ttext arg
 
 	jmp $				; fool check
 
-%include "./src/boot/print.s"
-%include "./src/boot/print_hex.s"
-%include "./src/boot/disk.s"
-%include "./src/boot/gdt.s"
-%include "./src/boot/print_pm.s"
-%include "./src/boot/32bit-switch.s"
+%include "./print.s"
+%include "./print_hex.s"
+%include "./disk.s"
+%include "./gdt.s"
+%include "./print_pm.s"
+%include "./32bit-switch.s"
 
 [bits 16]
 load_kernel:

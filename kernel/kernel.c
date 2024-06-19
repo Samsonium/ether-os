@@ -1,10 +1,10 @@
-#include "../cpu/isr.h"
-#include "../cpu/paging.h"
-#include "../drivers/screen.h"
-#include "kernel.h"
-#include "../libc/string.h"
-#include "../libc/mem.h"
-#include "cmd.h"
+#include "include/isr.h"
+#include "include/paging.h"
+#include "include/screen.h"
+#include "include/kernel.h"
+#include "include/string.h"
+#include "include/mem.h"
+#include "include/cmd.h"
 
 char logo[] = {" ________  _  __                    ___    ______   \n|_   __  |/ |[  |                 .'   `..' ____ \\  \n  | |_ \\_`| |-| |--. .---. _ .--./  .-.  | (___ \\_| \n  |  _| _ | | | .-. / /__\\[ `/'`\\| |   | |_.____`.  \n _| |__/ || |,| | | | \\__.,| |   \\  `-'  | \\____) | \n|________|\\__[___]|__'.__.[___]   `.___.' \\______.' \n,                                                    "};
 

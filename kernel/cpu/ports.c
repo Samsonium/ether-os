@@ -1,4 +1,4 @@
-#include "ports.h"
+#include "../include/ports.h"
 
 /// Read a byte from the specified port
 unsigned char port_byte_in(u16 port)

@@ -1,5 +1,5 @@
-#include "font.h"
-#include "../libc/mem.h"
+#include "../include/font.h"
+#include "../include/mem.h"
 
 #define USHRT_MAX 65536
 

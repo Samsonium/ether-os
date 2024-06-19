@@ -1,6 +1,6 @@
-#include "screen.h"
-#include "../cpu/ports.h"
-#include "../libc/mem.h"
+#include "../include/screen.h"
+#include "../include/ports.h"
+#include "../include/mem.h"
 
 // Declare private kernel API functions
 int get_cursor_offset();
