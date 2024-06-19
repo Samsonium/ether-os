@@ -2,7 +2,8 @@
 
 # Dirs
 !/docs
-!/src
+!/boot
+!/kernel
 
 # Files
 !/.gitignore
