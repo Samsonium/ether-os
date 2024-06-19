@@ -1,7 +1,8 @@
-########################
+######### 2024 #########
 # Boot sector Makefile #
-########################
+####### Samsonium ######
 
+# Dirs
 build = ../build
 
 # Targets
@@ -15,10 +16,10 @@ all: clean $(output)
 
 ##
 clean:
-	@echo "-> Clean old boot binary"
+	@echo "--> Clean old boot binary"
 	@rm -f $(output)
 
 ##
 $(output): $(input)
-	@echo "-> "
-	nasm $< -f bin -o $@
+	@echo "--> Building boot binary"
+	@nasm $< -f bin -o $@
