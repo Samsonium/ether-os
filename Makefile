@@ -1,97 +1,48 @@
-# Compiler and linker
-CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
-LD = /usr/local/i386elfgcc/bin/i386-elf-ld
-CFLAGS = -g -ffreestanding
+########## 2024 ###########
+# EtherOS common Makefile #
+######## Samsonium ########
 
 # Dirs
-src = ./src
-build = ./build
+build_dir = ./build
+boot_dir = ./boot
+kern_dir = ./kernel
 
 # Bin
-boot = $(build)/boot.bin
-kern = $(build)/kernel.bin
-os	 = $(build)/os.bin
+boot = $(build_dir)/boot.bin
+kern = $(build_dir)/kernel.bin
+os	 = $(build_dir)/os.bin
 
-# Kernel
-kern_in = $(wildcard $(build)/*.o)
-kern_entry = $(src)/kernel/kentry.s
+###########################
 
-# Boot
-boot_s = $(src)/boot/main.s
+## Build all
+all: prepare $(os)
 
-# Sources paths
-subdirs := cpu libc kernel drivers
-S_SOURCE := $(foreach dir, $(subdirs), $(wildcard $(src)/$(dir)/*.s))
-S_SOURCE := $(kern_entry) $(filter-out ${kern_entry}, $(S_SOURCE))
-C_SOURCE := $(foreach dir, $(subdirs), $(wildcard $(src)/$(dir)/*.c))
-C_HEADERS := $(foreach dir, $(subdirs), $(wildcard $(src)/$(dir)/*.h))
-ASM := ${S_SOURCE:.s=.o}
-OBJ := ${C_SOURCE:.c=.o}
-
-#
-# =================== [ Jobs ] ===================
-#
-
-# Run all jobs
-all: clean prepare run
-
-# Cleanup fs
+## Cleanup build
 clean:
-	@rm -rf $(build)
-	@rm -rf $(src)/**/*.o
+	@echo "-> Removing build directory"
+	@rm -rf $(build_dir)
 
-# Prepare project
+## Prepare project to build
 prepare:
 	@echo "-> Preparing"
-	@mkdir -p $(build)
+	@rm -rf $(build_dir)
+	@mkdir -p $(build_dir)
 
-after:
-	@echo "-> Removing temp files"
-	@rm -rf $(src)/**/*.o
+## Run OS image on i386 system
+run:
+	qemu-system-i386 -drive format=raw,file=$(os) -vga std -display sdl
 
-# Run emulator
-run: $(os) after
-	@echo "-> Running emulator"
-	qemu-system-x86_64 -drive format=raw,file=$< -vga std -display sdl
+## Build OS image
+$(boot):
+	@echo "-> Creating bootloader"
+	(cd $(boot_dir) && make)
 
-# Build OS image
+## Build kernel
+$(kern):
+	@echo "-> Building kernel"
+	(cd $(kern_dir) && make)
+
+## Build bootsector
 $(os): $(boot) $(kern)
-	@echo "-> Writing OS image"
-	@cat $(boot) $(kern) > $@
-
-#
-# === [ Kernel ] ===
-#
-
-define copy_font
-	@if [ "$1" = "font.o" ]; then \
-		echo "-> Copying font gr8x16.psf to $1"; \
-		objcopy -O elf32-i386 -B i386 -I binary $(src)/drivers/gr8x16.psf $2; \
-	fi
-endef
-
-# Make kernel binary
-$(kern): ${ASM} ${OBJ}
-	@echo "-> Building kernel.bin"
-	@echo "-> Source:" $^
-	@$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary --allow-multiple-definition
-
-# Build each .s
-$(ASM):%.o:%.s
-	@echo "-> Compiling" $(@F)
-	@nasm $< -f elf -o $@
-
-# Build each .c
-$(OBJ):%.o:%.c ${C_HEADERS}
-	@echo "-> Compiling" $(@F)
-	@$(CC) $(CFLAGS) -c $< -o $@
-	$(call copy_font,$(@F),$@)
-
-#
-# === [ Bootsector ] ===
-#
-
-# Build bootsector binary
-$(boot): $(boot_s)
-	@echo "-> Compiling bootloader"
-	@nasm $< -f bin -o $@
+	@echo "-> Exporting OS binary"
+	@cat $^ > $(build_dir)/os.bin
