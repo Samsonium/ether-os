@@ -62,6 +62,13 @@ void term_putat(char c, size_t x, size_t y)
 // Put character at specified pos
 void term_putchar(char c)
 {
+    if (c == '\n')
+    {
+        tc = 0;
+        tr++;
+        return;
+    }
+
     term_putat(c, tc, tr);
     if (++tc == VGA_W)
     {
@@ -83,4 +90,5 @@ extern "C" void kmain(void)
 {
     term_init();
     term_write("Hello, kernel world!\n");
+    term_write("I'm on line after!!");
 }
