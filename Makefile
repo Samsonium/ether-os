@@ -1,48 +1,61 @@
-########## 2024 ###########
-# EtherOS common Makefile #
-######## Samsonium ########
+##### Ether OS #####
+# EtherOS Makefile #
+####### 2024 #######
+TARGET = i686
+CC = /usr/local/$(TARGET)/bin/$(TARGET)-elf-gcc
+BUILD = build
 
-# Dirs
-build_dir = ./build
-boot_dir = ./boot
-kern_dir = ./kernel
+# Targets
+link = linker.ld
+boot = $(BUILD)/boot.o
+kern = $(BUILD)/kernel.o
+os   = $(BUILD)/os.bin
+iso  = $(BUILD)/os.iso
 
-# Bin
-boot = $(build_dir)/boot.bin
-kern = $(build_dir)/kernel.bin
-os	 = $(build_dir)/os.bin
+####################
 
-###########################
+##
+all: clean prepare $(iso)
 
-## Build all
-all: prepare $(os)
+## Run system
+run: $(iso)
+	@echo "-> Running emulator"
+	@qemu-system-i386 -cdrom $(iso) -vga std -display sdl
 
-## Cleanup build
+## Cleanup
 clean:
-	@echo "-> Removing build directory"
-	@rm -rf $(build_dir)
+	@echo "-> Cleanup"
+	@rm -rf $(BUILD)
 
-## Prepare project to build
+## Preparing
 prepare:
-	@echo "-> Preparing"
-	@rm -rf $(build_dir)
-	@mkdir -p $(build_dir)
+	@echo "-> Prearing"
+	@mkdir -p $(BUILD)
 
-## Run OS image on i386 system
-run:
-	qemu-system-i386 -drive format=raw,file=$(os) -vga std -display sdl
+## Make .iso
+$(iso): $(os)
+	@echo "-> Verifying multiboot"
+	@if grub-file --is-x86-multiboot $(os); then \
+		echo "Multiboot confirmed"; \
+	else \
+		echo "$(os) is not multiboot"; \
+	fi
+	@echo "-> Copying os binary"
+	@cp $< iso/boot/$(<F)
+	@echo "-> Writing .iso"
+	@grub-mkrescue /usr/lib/grub/i386-pc -o $(iso) iso
 
-## Build OS image
+## OS
+$(os): $(boot) $(kern)
+	@echo "-> Building os binary"
+	@$(CC) -T $(link) -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
+
+## Boot asm
 $(boot):
-	@echo "-> Creating bootloader"
-	(cd $(boot_dir) && make)
+	@echo "-> Building boot asm"
+	@(cd boot && make)
 
-## Build kernel
+## Kernel
 $(kern):
 	@echo "-> Building kernel"
-	(cd $(kern_dir) && make)
-
-## Build bootsector
-$(os): $(boot) $(kern)
-	@echo "-> Exporting OS binary"
-	@cat $^ > $(build_dir)/os.bin
+	@(cd kernel && make)
