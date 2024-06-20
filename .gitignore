@@ -1,14 +1,17 @@
 /*
 
 # Dirs
-!/docs
 !/boot
+!/docs
+!/include
+!/iso
 !/kernel
 
 # Files
 !/.gitignore
+!/linker.ld
 !/Makefile
 !/README.md
 
-# Exclude .o
-/**/*.o
+# Excluding build from iso dir
+/iso/boot/os.bin
