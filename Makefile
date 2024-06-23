@@ -8,7 +8,7 @@ BUILD = build
 # Targets
 link = linker.ld
 boot = $(BUILD)/boot.o
-kern = $(BUILD)/kernel.o
+kern = $(wildcard $(BUILD)/*.c.o)
 os   = $(BUILD)/os.bin
 iso  = $(BUILD)/os.iso
 
@@ -46,16 +46,16 @@ $(iso): $(os)
 	@grub-mkrescue /usr/lib/grub/i386-pc -o $(iso) iso
 
 ## OS
-$(os): $(boot) $(kern)
+$(os): build_boot build_kernel
 	@echo "-> Building os binary"
-	@$(CC) -T $(link) -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc
+	@$(CC) -T $(link) -o $@ -ffreestanding -O2 -nostdlib $(boot) $(kern) -lgcc
 
 ## Boot asm
-$(boot):
+build_boot:
 	@echo "-> Building boot asm"
 	@(cd boot && make)
 
 ## Kernel
-$(kern):
+build_kernel:
 	@echo "-> Building kernel"
 	@(cd kernel && make)
