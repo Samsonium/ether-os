@@ -26,6 +26,7 @@ run: $(iso)
 clean:
 	@echo "-> Cleanup"
 	@rm -rf $(BUILD)
+	@rm -f iso/boot/os.bin
 
 ## Preparing
 prepare:
@@ -36,14 +37,16 @@ prepare:
 $(iso): $(os)
 	@echo "-> Verifying multiboot"
 	@if grub-file --is-x86-multiboot $(os); then \
-		echo "Multiboot confirmed"; \
+		echo "-> Multiboot confirmed"; \
+		echo "-> Copying os binary"; \
+		cp $< iso/boot/$(<F); \
+		echo "-> Writing .iso"; \
+		grub-mkrescue /usr/lib/grub/i386-pc -o $(iso) iso; \
 	else \
 		echo "$(os) is not multiboot"; \
+		rm -rf ./build; \
+		exit 64; \
 	fi
-	@echo "-> Copying os binary"
-	@cp $< iso/boot/$(<F)
-	@echo "-> Writing .iso"
-	@grub-mkrescue /usr/lib/grub/i386-pc -o $(iso) iso
 
 ## OS
 $(os): build_boot build_kernel
