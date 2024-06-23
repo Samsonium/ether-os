@@ -11,8 +11,15 @@ inline uint8_t byte_in(uint16_t port)
     return value;
 }
 
+// Write byte
+inline void byte_out(uint16_t port, uint8_t value)
+{
+    __asm__("outb %0, %1" : : "a"(value), "Nd"(port));
+    io_wait();
+}
+
 // Read word
-inline uint8_t word_in(uint16_t port)
+inline uint16_t word_in(uint16_t port)
 {
     uint16_t value;
 
@@ -20,13 +27,6 @@ inline uint8_t word_in(uint16_t port)
     io_wait();
 
     return value;
-}
-
-// Write byte
-inline void byte_out(uint16_t port, uint8_t value)
-{
-    __asm__("outb %0, %1" : : "a"(value), "Nd"(port));
-    io_wait();
 }
 
 // Write word
@@ -51,5 +51,5 @@ inline void io_interrupts_disable()
 // Await for change
 inline void io_wait()
 {
-    __asm__("outb, %%al, $0x80" : : "a"(0));
+    __asm__("outb %%al, $0x80" : : "a"(0));
 }
