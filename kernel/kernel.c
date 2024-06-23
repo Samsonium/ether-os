@@ -86,7 +86,7 @@ void term_write(const char *data)
         term_putchar(data[i]);
 }
 
-extern "C" void kmain(void)
+void kmain(void)
 {
     term_init();
     term_write("Hello, kernel world!\n");

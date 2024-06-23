@@ -2,11 +2,11 @@
 # Kernel Makefile #
 ####### 2024 ######
 TARGET = i686
-CC = /usr/local/$(TARGET)/bin/$(TARGET)-elf-g++
-CFLAGS = -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+CC = /usr/local/$(TARGET)/bin/$(TARGET)-elf-gcc
+CFLAGS = -ffreestanding -O2 -Wall -Wextra -std=gnu99
 
 # Targets
-kernel_in  = kernel.cpp
+kernel_in  = kernel.c
 kernel_out = ../build/kernel.o
 
 ###################
