@@ -8,6 +8,7 @@
 !/.gitignore
 !/ether
 !/Makefile
+!/setup
 
 # Additional exclude
 *.o

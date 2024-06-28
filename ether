@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
+if [ $(whereis ether | awk '{print($2)}') ]; then
+  echo Found executable, continue
+else
+  echo Cannot find \"ether\" executable. Run \"sudo ./setup\" first
+  exit 1
+fi
+
 image=ether-toolchain
-br="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+br="$(dirname "$(readlink -f ether)")"
+echo $br
 
 # Ask to build docker image if not found
 if [[ ! $(docker image ls -q -f reference=${image}) ]]; then
