@@ -1,17 +1,14 @@
+# Ignore all files
 /*
 
-# Dirs
+# Exclude directories
 !/boot
-!/docs
-!/include
-!/iso
 !/kernel
+!/targets
 
-# Files
+# Exclude files
 !/.gitignore
-!/linker.ld
-!/Makefile
 !/README.md
 
-# Excluding build from iso dir
-/iso/boot/os.bin
+# Additionally, exclude some files
+*.bin
