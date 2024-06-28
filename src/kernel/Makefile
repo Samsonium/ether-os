@@ -3,7 +3,7 @@
 ## Samsonium ##
 
 # Check for environment
-ifeq ($(MITTOS64),)
+ifeq ($(ISETHER),)
 $(error Unsupported environment)
 endif
 
@@ -30,19 +30,23 @@ PREFIX ?= /
 #### Common targets ####
 
 ##
-kernel: $(OBJ)
+kernel.bin: $(OBJ)
 	$(LINK.c) $^ -o $@
 
 ##
-install: $(DESTDIR)$(PREFIX)/kernel
+install: $(DESTDIR)$(PREFIX)/kernel.bin
 
 ##
-$(DESTDIR)$(PREFIX)/kernel: kernel
-	install -D kernel $(DESTDIR)$(PREFIX)/kernel
+$(DESTDIR)$(PREFIX)/kernel.bin: kernel.bin
+	install -D kernel.bin $(DESTDIR)$(PREFIX)/kernel.bin
 
 ##
-clean:
-	rm -rf $(OBJ) $(DEP) kernel
+after:
+	rm -rf $(OBJ) $(DEP)
+
+##
+clean: after
+	rm -rf kernel.bin
 
 ##
 .PHONY: install
