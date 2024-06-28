@@ -1,8 +1,14 @@
 /*
 
 # Dirs
+!/src
 !/toolchain
 
 # Files
 !/.gitignore
 !/ether
+!/Makefile
+
+# Additional exclude
+*.o
+*.d
