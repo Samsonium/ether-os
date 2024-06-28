@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+if [ -z ${ISETHER+x} ]; then >&2 echo "Error! Unsupported environment"; exit 1; fi
+
+sysroot=${BUILDROOT}/sysroot
+iso=${BUILDROOT}/ether64.iso
+
+mkdir -p ${sysroot}
+grub-mkrescue -o ${iso} ${sysroot}
