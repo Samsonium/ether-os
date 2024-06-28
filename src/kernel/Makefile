@@ -21,7 +21,7 @@ CFLAGS := -Wall -Wextra -pedantic -ffreestanding
 CFLAGS += -ggdb -O0
 ASFLAGS := -ggdb
 CPPFLAGS := -I include
-LDFLAGS := -n -nostdlib -lgcc -T Link.ld
+LDFLAGS := -n -nostdlib -lgcc -T link.ld
 
 # Etc
 DESTDIR ?= $(BUILDROOT)sysroot
