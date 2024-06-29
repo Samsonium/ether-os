@@ -4,7 +4,6 @@
 .section .data
 .align PAGE_SIZE
 .global BootP4
-
 BootP4:
   .quad offset V2P(BootP3) + (PAGE_PRESENT | PAGE_WRITE)
   .rept ENTRIES_PER_PT - 2
