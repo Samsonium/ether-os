@@ -2,4 +2,4 @@
 
 if [ -z ${ISETHER+x} ]; then >&2 echo "Error! Unsupported environment"; exit 1; fi
 
-/usr/bin/gdb -q -x ${BUILDROOT}/toolchain/gdbinit
+/usr/bin/gdb -q -x ${BUILDROOT}toolchain/gdbinit

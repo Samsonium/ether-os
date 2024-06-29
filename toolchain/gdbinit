@@ -1,6 +1,12 @@
 set prompt \033[31m(gdb) \033[0m
 set disassembly-flavor intel
 
+python
+import os
+filePath = os.environ['BUILDROOT'] + 'sysroot/kernel.bin'
+gdb.execute('file ' + filePath)
+end
+
 target remote :1234
 
 define q
@@ -12,5 +18,5 @@ monitor info registers
 end
 
 define reset
-monitoring system_reset
+monitor system_reset
 end
