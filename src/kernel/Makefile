@@ -41,4 +41,7 @@ clean:
 
 .phony: install
 
+after:
+	rm -rf $(OBJ) $(DEP)
+
 include $(DEP)
