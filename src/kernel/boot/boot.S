@@ -14,7 +14,7 @@ _start:
     cli
 
     // Set up a known stack
-    mov esp, offset BootStack
+    mov esp, offset V2P(BootStack)
 
     // Enable "Physical Address Extension"
     mov eax, cr4
@@ -22,7 +22,7 @@ _start:
     mov cr4, eax
 
     // Load a P4 page table
-    mov eax, offset BootP4
+    mov eax, offset V2P(BootP4)
     mov cr3, eax
 
     // Enable long mode
@@ -37,10 +37,10 @@ _start:
     mov cr0, eax
 
     // Load a new GDT
-    lgdt [BootGDTp]
+    lgdt [V2P(BootGDTp)]
 
     // Update code selector by a long jump
-    jmp 0x8:long_mode_start
+    jmp 0x8:V2P(long_mode_start)
 
 .code64
     long_mode_start:
@@ -51,5 +51,10 @@ _start:
     mov ds, eax
     mov es, eax
 
-    // Infinite loop
+    // Jump to kernel address space
+    movabs rax, offset upper_memory
+    jmp rax
+
+upper_memory:
+    
     jmp $
