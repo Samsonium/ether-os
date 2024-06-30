@@ -4,6 +4,19 @@
 #include <multiboot.h>
 #include <cpu.h>
 #include <interrupts.h>
+#include <thread.h>
+#include <scheduler.h>
+
+void thread_function()
+{
+    int thread_id = thread()->tid;
+
+    while (1)
+    {
+        debug("Thread %d\n", thread_id);
+        yield();
+    }
+}
 
 registers *divbyzero(registers *r)
 {
@@ -25,6 +38,12 @@ void kmain(uint64_t multiboot_magic, void *multiboot_data)
     cpu_init();
 
     debug_ok("Boot process complete!\n");
+
+    ready(new_thread(thread_function));
+    ready(new_thread(thread_function));
+    ready(new_thread(thread_function));
+
+    start_scheduler();
 
     PANIC("Reached the end of kernel main function!\n");
     for (;;)
