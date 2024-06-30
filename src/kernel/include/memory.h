@@ -25,10 +25,29 @@
 #define ENTRIES_PER_PT 512
 
 #ifndef __ASSEMBLER__
+
 #include <stddef.h>
+
 void *memcpy(void *dst, const void *src, size_t n);
 void *memset(void *s, int c, size_t n);
 void *memmove(void *dest, const void *src, size_t n);
 int memcmp(const void *s1, const void *s2, size_t n);
 size_t strlen(const char *s);
+
+void pmm_free(uint64_t page);
+uint64_t pmm_alloc();
+uint64_t pmm_calloc();
+
+uint64_t vmm_get_page(uint64_t P4, uint64_t addr);
+
+#define PAGE_EXISTS(p) ((p) != (uint64_t) - 1)
+
+int vmm_set_page(uint64_t P4, uint64_t addr, uint64_t page, uint64_t flags);
+void vmm_clear_page(uint64_t P4, uint64_t addr, int free);
+
+extern union PTE BootP4;
+extern int kernel_start, kernel_end;
+
+void memory_init();
+
 #endif
