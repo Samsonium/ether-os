@@ -11,7 +11,7 @@ print('''
 .extern isr_common
 ''')
 
-print('// Interrupt service routines')
+print('// Interrupt Service Routines')
 for i in range(num_isr):
     print('''isr{0}:
     cli
@@ -29,4 +29,4 @@ print('''
 isr_table:''')
 
 for i in range(num_isr):
-    print('    .quad isr{}'.format(i))
+    print('  .quad isr{}'.format(i))

@@ -4,3 +4,4 @@
 
 void vga_init();
 void vga_write(char c);
+void vga_clear();
