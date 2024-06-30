@@ -25,14 +25,13 @@ void kmain(uint64_t multiboot_magic, void *multiboot_data)
     cpu_init();
 
     struct process *p1 = new_process((void (*)(void))0x10000);
-    uint64_t page = pmm_alloc();
-    vmm_set_page(p1->P4, 0x10000, page, PAGE_WRITE | PAGE_PRESENT | PAGE_USER);
-    memcpy(P2V(page), (void *)(uintptr_t)thread_function, PAGE_SIZE);
+
+    procmm_brk(p1, (void *)0x10010);
+    memcpy_to_p4(p1->P4, (void *)0x10000, (void *)(uintptr_t)thread_function, 100);
 
     ready(p1);
 
     debug_ok("Boot process complete!\n");
-    debug("User space is located at %x (virt %x)\n", page, P2V(page));
 
     start_scheduler();
 
