@@ -5,4 +5,10 @@ if [ -z ${ISETHER+x} ]; then >&2 echo "Error! Unsupported environment"; exit 1; 
 iso=${BUILDROOT}/ether64.iso
 ${BUILDROOT}/toolchain/mkiso
 
-qemu-system-x86_64 -s -S -cdrom ${iso} -curses
+if [ "$1" == "debug" ]; then
+    echo "Entering debug mode"
+    qemu-system-x86_64 -s -S -cdrom ${iso} -curses
+else
+    echo "Normal mode"
+    qemu-system-x86_64 -s -cdrom ${iso} -curses
+fi
