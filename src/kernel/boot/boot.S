@@ -40,7 +40,7 @@ _start:
     mov cr0, eax
 
     // Load a new GDT
-    lgdt [V2P(BootGDTp)]
+    lgdt [V2P(GDTp)]
 
     // Update code selector by a long jump
     jmp 0x8:V2P(long_mode_start)
@@ -71,7 +71,7 @@ upper_memory:
     mov cr3, rax
 
     // Reload GDT
-    movabs rax, offset BootGDTp
+    movabs rax, offset GDTp
     lgdt [rax]
     mov rax, 0x0
     mov ss, rax

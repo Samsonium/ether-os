@@ -32,6 +32,7 @@ void kmain(uint64_t multiboot_magic, void *multiboot_data)
     ready(p1);
 
     debug_ok("Boot process complete!\n");
+    debug("User space is located at %x (virt %x)\n", page, P2V(page));
 
     start_scheduler();
 
