@@ -56,5 +56,36 @@ _start:
     jmp rax
 
 upper_memory:
-    
+    mov rax, KERNEL_OFFSET
+    add rsp, rax
+
+    // Remove identity mapping
+    mov rax, 0
+    movabs [BootP4], rax
+
+    // Update page tables
+    mov rax, cr3
+    mov cr3, rax
+
+    // Reload GDT
+    movabs rax, offset BootGDTp
+    lgdt [rax]
+    mov rax, 0x0
+    mov ss, rax
+    mov ds, rax
+    mov es, rax
+
+    // Reload CS
+    movabs rax, offset .reload_cs
+    pushq 0x8
+    push rax
+    retfq
+.reload_cs:
+
+// Jump to kernel main function
+.extern kmain
+    movabs rax, offset kmain
+    call rax
+
+    hlt
     jmp $
