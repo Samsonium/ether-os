@@ -8,3 +8,4 @@ clean:
 	find . -name \*.o -type f -delete
 	find . -name \*.d -type f -delete
 	rm -f src/kernel/kernel.bin
+	rm -rf sysroot
