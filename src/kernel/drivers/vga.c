@@ -34,6 +34,7 @@ void vga_init()
     memset(vmem, 0, VGA_SIZE * sizeof(struct vga_cell));
 
     format = 0x07;
+    vga_clear();
 }
 
 void movecursor()
@@ -74,4 +75,10 @@ void vga_write(char c)
     scroll();
     flush();
     movecursor();
+}
+
+void vga_clear()
+{
+    for (int i = 0; i < VGA_SIZE; i++)
+        buffer[i++] = (struct vga_cell){.sym = ' ', .fmt = 0x00};
 }
