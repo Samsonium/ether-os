@@ -1,18 +1,17 @@
 #include <memory.h>
 #include <vga.h>
 #include <debug.h>
+#include <multiboot.h>
 
 void kmain(uint64_t multiboot_magic, void *multiboot_data)
 {
     vga_init();
+    debug_info("Kernel loaded\n");
 
-    debug("Hello from debug print\n");
-    debug("A number: %d\n", 14325);
+    multiboot_init(multiboot_magic, P2V(multiboot_data));
+    debug_info("Kernel was loaded with CL \"%s\", by <%s>\n", kboot_data.commandline, kboot_data.bootloader);
 
-    debug_info("Some info\n");
-    debug_ok("Worked well!\n");
-    debug_warning("Bee careful :D\n");
-    debug_error("Smth went wrong ;(((((\n");
+    debug_ok("Boot process complete!\n");
 
     PANIC("Reached the end of kernel main function!\n");
     for (;;)
