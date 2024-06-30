@@ -20,6 +20,7 @@
 #define PAGE_PRESENT 0x001
 #define PAGE_WRITE 0x002
 #define PAGE_HUGE 0x080
+#define PAGE_GLOBAL 0x100
 
 #define PAGE_SIZE 0x1000
 #define ENTRIES_PER_PT 512
@@ -42,7 +43,7 @@ uint64_t vmm_get_page(uint64_t P4, uint64_t addr);
 
 #define PAGE_EXISTS(p) ((p) != (uint64_t) - 1)
 
-int vmm_set_page(uint64_t P4, uint64_t addr, uint64_t page, uint64_t flags);
+int vmm_set_page(uint64_t P4, uint64_t addr, uint64_t page, uint16_t flags);
 void vmm_clear_page(uint64_t P4, uint64_t addr, int free);
 
 extern union PTE BootP4;
