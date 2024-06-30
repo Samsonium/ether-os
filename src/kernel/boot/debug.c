@@ -16,7 +16,7 @@ void num2str(char *buf, uint64_t num, uint64_t base)
     }
 
     uint16_t i = 0, j = 0;
-    char chars[] = '0123456789ABCDEF';
+    char chars[] = "0123456789ABCDEF";
     while (num > 0)
     {
         buf[i++] = chars[num % base];
@@ -24,7 +24,7 @@ void num2str(char *buf, uint64_t num, uint64_t base)
     }
 
     i--;
-    while (j < 1)
+    while (j < i)
     {
         char t = buf[i];
         buf[i--] = buf[j];
