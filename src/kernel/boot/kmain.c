@@ -1,27 +1,20 @@
 #include <memory.h>
-
-void clear_screen()
-{
-    unsigned char *vmem = P2V(0xB8000);
-    for (int i = 0; i < 80 * 24 * 2; i++)
-        *vmem++ = 0;
-}
-
-void print_string(char *str)
-{
-    unsigned char *vmem = P2V(0xB8000);
-    while (*str)
-    {
-        *vmem++ = *str++;
-        *vmem++ = 0x0F;
-    }
-}
+#include <vga.h>
+#include <debug.h>
 
 void kmain()
 {
-    clear_screen();
-    print_string("Hello, World from C!");
+    vga_init();
 
+    debug("Hello from debug print\n");
+    debug("A number: %d\n", 14325);
+
+    debug_info("Some info\n");
+    debug_ok("Worked well!\n");
+    debug_warning("Bee careful :D\n");
+    debug_error("Smth went wrong ;(((((\n");
+
+    PANIC("Reached the end of kernel main function!\n");
     for (;;)
         ;
 }
