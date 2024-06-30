@@ -10,8 +10,8 @@ CC := x86_64-elf-gcc
 DESTDIR ?= $(BUILDROOT)/sysroot
 
 # Objects
-SRC := $(wildcard **/*.[cS])
-OBJ := $(patsubst %, %.o, $(basename $(SRC)))
+SRC := $(wildcard **/*.[cS]*)
+OBJ := $(patsubst %, %.o, $(basename $(basename $(SRC))))
 DEP := $(OBJ:.o=.d)
 
 # Flags
@@ -25,6 +25,10 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $*.d
 # Kernel binary target
 kernel.bin: $(OBJ)
 	$(LINK.c) $^ -o $@
+
+# Compile asm from .py
+%.o: %.S.py
+	python $^ | $(COMPILE.S) $(DEPFLAGS) -x assembler-with-cpp - -o $@
 
 # Dependencies
 $(OBJ): CPPFLAGS += $(DEPFLAGS)
