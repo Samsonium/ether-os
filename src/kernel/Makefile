@@ -16,7 +16,7 @@ DEP := $(OBJ:.o=.d)
 
 # Flags
 CFLAGS := -Wall -Wextra -pedantic -ffreestanding
-CFLAGS += -ggdb -O0
+CFLAGS += -ggdb -O0 -mcmodel=large
 ASFLAGS += -ggdb
 CPPFLAGS += -I include
 LDFLAGS := -n -nostdlib -lgcc -T Link.ld
