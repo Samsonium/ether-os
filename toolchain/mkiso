@@ -16,6 +16,4 @@ menuentry "Ether OS" {
 
 EOF
 
-ls ${sysroot}/boot/grub
-
 grub-mkrescue -o ${iso} ${sysroot}
