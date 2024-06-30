@@ -4,26 +4,19 @@
 #include <multiboot.h>
 #include <cpu.h>
 #include <interrupts.h>
-#include <thread.h>
+#include <process.h>
 #include <scheduler.h>
 
+int *pid = (int *)0x20000;
 void thread_function()
 {
-    int thread_id = thread()->tid;
+    *pid = process()->pid;
 
     while (1)
     {
-        debug("Thread %d\n", thread_id);
+        debug("Process %d\n", *pid);
         yield();
     }
-}
-
-registers *divbyzero(registers *r)
-{
-    debug_error("Divide by zero error!\n");
-    debug_print_registers(r);
-    for (;;)
-        ;
 }
 
 void kmain(uint64_t multiboot_magic, void *multiboot_data)
@@ -37,11 +30,18 @@ void kmain(uint64_t multiboot_magic, void *multiboot_data)
     memory_init();
     cpu_init();
 
-    debug_ok("Boot process complete!\n");
+    struct process *p1 = new_process(thread_function);
+    vmm_set_page(p1->P4, 0x20000, pmm_alloc(), PAGE_WRITE | PAGE_PRESENT);
+    struct process *p2 = new_process(thread_function);
+    vmm_set_page(p2->P4, 0x20000, pmm_alloc(), PAGE_WRITE | PAGE_PRESENT);
+    struct process *p3 = new_process(thread_function);
+    vmm_set_page(p3->P4, 0x20000, pmm_alloc(), PAGE_WRITE | PAGE_PRESENT);
 
-    ready(new_thread(thread_function));
-    ready(new_thread(thread_function));
-    ready(new_thread(thread_function));
+    ready(p1);
+    ready(p2);
+    ready(p3);
+
+    debug_ok("Boot process complete!\n");
 
     start_scheduler();
 

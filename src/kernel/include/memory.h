@@ -29,6 +29,8 @@
 
 #include <stddef.h>
 
+extern uint64_t kernel_P4;
+
 void *memcpy(void *dst, const void *src, size_t n);
 void *memset(void *s, int c, size_t n);
 void *memmove(void *dest, const void *src, size_t n);
@@ -39,6 +41,7 @@ void pmm_free(uint64_t page);
 uint64_t pmm_alloc();
 uint64_t pmm_calloc();
 
+uint64_t new_P4();
 uint64_t vmm_get_page(uint64_t P4, uint64_t addr);
 
 #define PAGE_EXISTS(p) ((p) != (uint64_t) - 1)

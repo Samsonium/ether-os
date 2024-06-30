@@ -2,9 +2,9 @@
 
 #include <queue.h>
 
-#define runQ readyQ, readyQ_next, struct thread
+#define runQ readyQ, readyQ_next, struct process
 
 extern QUEUE_DECLARE(runQ);
 
-void ready(struct thread *th);
-struct thread *scheduler_next();
+void ready(struct process *proc);
+struct process *scheduler_next();
