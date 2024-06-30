@@ -2,7 +2,7 @@
 #include <vga.h>
 #include <debug.h>
 
-void kmain()
+void kmain(uint64_t multiboot_magic, void *multiboot_data)
 {
     vga_init();
 
