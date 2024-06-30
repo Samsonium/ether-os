@@ -7,10 +7,13 @@
 BootStack:
 
 .section .text
-.global _start
+
 .code32
+.global _start
 _start:
     cli
+
+    // Set up a known stack
     mov esp, offset BootStack
 
     // Enable "Physical Address Extension"

@@ -25,7 +25,7 @@ BootP2:
 
 BootP1:
     .set i, 0
-    .rept ENTRIES_PER_PT - 1
+    .rept ENTRIES_PER_PT
         .quad (i << 12) + (PAGE_PRESENT | PAGE_WRITE)
         .set i, (i + 1)
     .endr
