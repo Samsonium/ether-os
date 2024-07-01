@@ -34,15 +34,15 @@ registers *proc_pagefault(registers *r)
     }
 
     uint64_t fault_addr = read_cr2();
-    uint64_t stack = process()->stack;
+    uint64_t stack = cpu->process->stack;
     if (fault_addr + PAGE_SIZE >= stack)
     {
-        if (stack - PAGE_SIZE <= process()->brk)
-            PANIC("Stack overflow in process %d\n", process()->pid);
+        if (stack - PAGE_SIZE <= cpu->process->brk)
+            PANIC("Stack overflow in process %d\n", cpu->process->pid);
 
         stack -= PAGE_SIZE;
-        vmm_set_page(process()->P4, stack, pmm_alloc(), PAGE_USER | PAGE_WRITE | PAGE_PRESENT);
-        process()->stack = stack;
+        vmm_set_page(cpu->process->P4, stack, pmm_alloc(), PAGE_USER | PAGE_WRITE | PAGE_PRESENT);
+        cpu->process->stack = stack;
 
         return r;
     }
