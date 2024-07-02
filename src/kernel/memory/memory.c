@@ -13,7 +13,6 @@ void memory_init()
     debug_info("Parsing memory map\n");
     while (!multiboot_get_mem_area(i++, &start, &end, &type))
     {
-        debug("0x%016x-0x%016x (%d)\n", start, end, type);
         for (uint64_t p = start; p < end; p += PAGE_SIZE)
         {
             if (p >= V2P(&kernel_start) && p <= V2P(&kernel_end))
