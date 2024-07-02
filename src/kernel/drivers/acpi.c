@@ -3,13 +3,13 @@
 #include <debug.h>
 
 #define RSDP_SIGNATURE "RSD PTR "
-
 #define MADT_SIGNATURE "APIC"
+
 #define MADT_CPU 0
 #define MADT_IOAPIC 1
 #define MADT_INT 2
 
-struct rsdp
+typedef struct rsdp
 {
     uint8_t signature[8];
     uint8_t checksum;
@@ -18,36 +18,35 @@ struct rsdp
     uint32_t rsdt;
     uint32_t length;
     uint64_t xsdt;
-    uint8_t checksum2;
-    uint8_t _[3];
-} __attribute__((packed));
+    uint8_t x_checksum;
+    uint8_t reserved[3];
+} __attribute__((packed)) rsdp_t;
 
-struct sdt
+typedef struct sdt
 {
-    uint8_t signature[8];
+    uint8_t signature[4];
     uint32_t length;
     uint8_t revision;
     uint8_t checksum;
     uint8_t OEMID[6];
-    uint8_t tableID[8];
+    uint8_t table_ID[8];
     uint32_t OEM_revision;
     uint32_t creator;
     uint32_t creator_rev;
     uint8_t data[];
-} __attribute__((packed));
+} __attribute__((packed)) sdt_t;
 
-struct madt
+typedef struct madt
 {
-    uint32_t lic_address;
-    uint32_t falgs;
+    uint32_t lic_addr;
+    uint32_t flags;
     uint8_t data[];
-} __attribute__((packed));
+} __attribute__((packed)) madt_t;
 
-struct madt_entry
+typedef struct madt_entry
 {
     uint8_t type;
     uint8_t length;
-
     union
     {
         struct
@@ -56,7 +55,6 @@ struct madt_entry
             uint8_t apic;
             uint32_t flags;
         } __attribute__((packed)) lapic;
-
         struct
         {
             uint8_t id;
@@ -64,7 +62,6 @@ struct madt_entry
             uint32_t addr;
             uint32_t base;
         } __attribute__((packed)) ioapic;
-
         struct
         {
             uint8_t bus;
@@ -73,9 +70,9 @@ struct madt_entry
             uint16_t flags;
         } __attribute__((packed)) interrupt;
     };
-} __attribute__((packed));
+} __attribute__((packed)) madt_entry_t;
 
-struct acpi_info acpi_info = {0};
+acpi_info_t acpi_info = {0};
 
 static void *scan_rsdp(uint64_t start, uint64_t end)
 {
@@ -90,7 +87,7 @@ static void *scan_rsdp(uint64_t start, uint64_t end)
     return 0;
 }
 
-static struct rsdp *find_rsdp()
+static rsdp_t *find_rsdp()
 {
     // Extended BIOS Data Area
     uint16_t *ebda_ptr = P2V(0x40E);
@@ -107,19 +104,18 @@ static struct rsdp *find_rsdp()
     return 0;
 }
 
-static void parse_madt(struct madt *madt, uint32_t length)
+static void parse_madt(madt_t *madt, uint32_t length)
 {
     uintptr_t end = (uintptr_t)madt + length;
-    struct madt_entry *e = (void *)madt->data;
-
-    debug_info("Local interrupt controller: %x\n", madt->lic_address);
-
+    madt_entry_t *e = (void *)madt->data;
+    debug_info("Local interrupt controller: %x\n", madt->lic_addr);
     while ((uintptr_t)e < end)
     {
         int i;
         switch (e->type)
         {
         case MADT_CPU:
+            debug_info("Added CPU\n");
             if (!(e->lapic.id & 1))
                 break;
             i = acpi_info.num_cpus;
@@ -129,6 +125,7 @@ static void parse_madt(struct madt *madt, uint32_t length)
             break;
 
         case MADT_IOAPIC:
+            debug_info("Added IOAPIC\n");
             i = acpi_info.num_ioapic;
             acpi_info.ioapic[i].id = e->ioapic.id;
             acpi_info.ioapic[i].addr = e->ioapic.addr;
@@ -137,26 +134,32 @@ static void parse_madt(struct madt *madt, uint32_t length)
             break;
 
         case MADT_INT:
+            debug_info("Added interrupt\n");
             acpi_info.int_map[e->interrupt.source] = e->interrupt.target;
             break;
+
+        default:
+            debug_warning("Unknown MADT entry %d\n", e->type);
         }
 
-        debug_info(" MADT(type=%d, length=%d)\n", e->type, e->length);
+        //        debug_info(" MADT(type=%d, length=%d)\n", e->type, e->length);
         e = incptr(e, e->length);
     }
 }
 
-static void parse_sdt(struct sdt *sdt, uint8_t revision)
+static void parse_sdt(sdt_t *sdt, uint8_t revision)
 {
     uint32_t *p32 = (void *)sdt->data;
     uint64_t *p64 = (void *)sdt->data;
 
-    int entries = (sdt->length - sizeof(struct sdt)) / (revision ? 8 : 4);
+    int entries = (sdt->length - sizeof(sdt_t)) / (revision ? 8 : 4);
+    debug_info("Found %d SDT entries\n", entries);
+
     for (int i = 0; i < entries; i++)
     {
-        struct sdt *table = P2V(revision ? p64[i] : p32[i]);
+        sdt_t *table = P2V(revision ? p64[i] : p32[i]);
 
-        debug_info("Found table:");
+        debug_info("Found table: ");
         debug_putsn((char *)table->signature, 4);
         debug_printf("\n");
 
@@ -167,7 +170,9 @@ static void parse_sdt(struct sdt *sdt, uint8_t revision)
 
 void acpi_init()
 {
-    struct rsdp *rsdp = find_rsdp();
-    struct sdt *sdt = P2V(rsdp->revision ? rsdp->xsdt : rsdp->rsdt);
-    parse_sdt(sdt, rsdp->revision);
+    rsdp_t *rsdp = find_rsdp();
+    debug_info("ACPI version: %s\n", rsdp->revision == 2 ? "2+ (XSDP)" : "1.0 (RSDP)");
+
+    sdt_t *s = P2V(rsdp->revision == 2 ? rsdp->xsdt : rsdp->rsdt);
+    parse_sdt(s, rsdp->revision);
 }

@@ -5,7 +5,7 @@
 #define MAX_CPUS 16
 #define MAX_IOAPIC 4
 
-struct acpi_info
+typedef struct acpi_info
 {
     int num_cpus;
     struct
@@ -23,9 +23,9 @@ struct acpi_info
     } ioapic[MAX_IOAPIC];
 
     uint32_t int_map[256];
-};
+} acpi_info_t;
 
-extern struct acpi_info acpi_info;
+extern acpi_info_t acpi_info;
 
 void acpi_init();
 int get_cpu();

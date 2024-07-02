@@ -24,11 +24,11 @@ void kmain(uint64_t multiboot_magic, void *multiboot_data)
 
     memory_init();
     cpu_init();
+    acpi_init();
 
     struct process *p1 = new_process((void (*)(void))0x10000);
     procmm_brk(p1, (void *)0x10100);
     memcpy_to_p4(p1->P4, (void *)0x10000, (void *)(uintptr_t)thread_function, 100);
-
     ready(p1);
 
     struct process *p2 = new_process((void (*)(void))0x10000);
