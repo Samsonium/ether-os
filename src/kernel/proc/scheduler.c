@@ -4,9 +4,9 @@
 
 QUEUE_DEFINE(runQ);
 
-void ready(struct process *th)
+void ready(struct process *proc)
 {
-    queue_add(runQ, th);
+    queue_add(runQ, proc);
 }
 
 struct process *scheduler_next()
