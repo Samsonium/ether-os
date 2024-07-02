@@ -7,8 +7,8 @@ ${BUILDROOT}/toolchain/mkiso
 
 if [ "$1" == "debug" ]; then
     echo "Entering debug mode"
-    qemu-system-x86_64 -s -S -cdrom ${iso} -curses
+    qemu-system-x86_64 -s -S -cdrom ${iso} -display curses
 else
     echo "Normal mode"
-    qemu-system-x86_64 -s -cdrom ${iso} -curses
+    qemu-system-x86_64 -s -cdrom ${iso} -display curses
 fi
