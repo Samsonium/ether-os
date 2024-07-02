@@ -3,16 +3,16 @@
 #include <stdint.h>
 #include <process.h>
 
-struct cpu
+typedef struct cpu
 {
     void *cpu;
     uint64_t gdt[6];
     uint8_t tss[104];
     struct process *process;
     struct process *scheduler;
-};
+} cpu_t;
 
-extern struct cpu __seg_gs *cpu;
+extern cpu_t __seg_gs *cpu;
 
 void cpu_init();
 

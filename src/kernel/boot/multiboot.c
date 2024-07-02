@@ -59,9 +59,6 @@ int parse_multiboot2(struct taglist *tags)
             kboot_data.mmap_length = (tag->size - 8) / mmap->entry_size;
             kboot_data.mmap_size = (tag->size - 8);
             break;
-
-        default:
-            debug_warning("Unknown multiboot2 tag type: %d \n", tag->type);
         }
 
         int padded_size = tag->size + ((tag->size % 8) ? (8 - (tag->size % 8)) : 0);
