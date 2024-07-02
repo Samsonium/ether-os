@@ -29,5 +29,5 @@ fi
 if [[ $(docker ps -q -f name=${image}-run) ]]; then
   docker exec -it -u $(id -u):$(id -g) ${image}-run "$@"
 else
-  docker run -it --rm -v ${br}:/opt --name ${image}-run -u $(id -u):$(id -g) ${image} "$@"
+  docker run -it -p 5900:5900 --rm -v ${br}:/opt --name ${image}-run -u $(id -u):$(id -g) ${image} "$@"
 fi
