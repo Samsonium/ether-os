@@ -11,8 +11,9 @@
 
 void thread_function()
 {
+    char *p = 0xDEADBEEF;
     while (1)
-        ;
+        p[0] = 1;
 }
 
 void kmain(uint64_t multiboot_magic, void *multiboot_data)

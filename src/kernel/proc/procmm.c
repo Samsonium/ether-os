@@ -47,6 +47,13 @@ registers *proc_pagefault(registers *r)
         return r;
     }
 
+    if (read_cr2() == 0xDEADBEEF)
+    {
+        debug_warning("Bad signal from process %d\n", cpu->process->pid);
+        yield();
+        return;
+    }
+
     PANIC("Page fault in process\n");
     return r;
 }
