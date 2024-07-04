@@ -1,5 +1,4 @@
 #include <keyboard.h>
-#include <stddef.h>
 #include <debug.h>
 
 registers *handle_keyboard(registers *s)
@@ -10,5 +9,5 @@ registers *handle_keyboard(registers *s)
 
 void keyboard_init()
 {
-    //bind_interrupt(INT_KB, handle_keyboard);
+    bind_interrupt(INT_KB, handle_keyboard);
 }
