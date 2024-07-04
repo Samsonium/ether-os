@@ -74,8 +74,6 @@ registers *int_handler(registers *r)
     if (int_handlers[r->int_no])
         return int_handlers[r->int_no](r);
 
-    debug_error("-------------------------------\n");
-    debug_error("Unhandled interrupt occured!\n");
     debug_error("%s: %d (error code: %d)\n", error_names[r->int_no], r->int_no, r->err_code);
     debug_print_registers(r);
 
