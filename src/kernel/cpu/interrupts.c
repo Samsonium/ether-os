@@ -30,6 +30,14 @@ struct
 extern uintptr_t isr_table[];
 int_handler_t int_handlers[NUM_INTERRUPTS];
 
+char *error_names[] = {
+    "", "", "", "", "", "", "", "",
+    "double fault", "", "invalid TSS",
+    "segment not present", "stack segment fault",
+    "general protection fault", "page fault", "",
+    "", "alignment check"
+};
+
 void idt_set_gate(uint32_t num, uintptr_t vector, uint16_t cs, uint8_t ist, uint8_t flags)
 {
     idt[num].base_l = vector & 0xFFFF;
@@ -66,8 +74,9 @@ registers *int_handler(registers *r)
     if (int_handlers[r->int_no])
         return int_handlers[r->int_no](r);
 
-    debug("Unhandled interrupt occured!\n");
-    debug("Interrupt number: %d (error code: %d)\n", r->int_no, r->err_code);
+    debug_error("-------------------------------\n");
+    debug_error("Unhandled interrupt occured!\n");
+    debug_error("%s: %d (error code: %d)\n", error_names[r->int_no], r->int_no, r->err_code);
     debug_print_registers(r);
 
     PANIC("Unhandled interrupt!!1!");
