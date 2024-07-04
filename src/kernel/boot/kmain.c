@@ -4,16 +4,13 @@
 #include <debug.h>
 #include <multiboot.h>
 #include <cpu.h>
-#include <interrupts.h>
 #include <process.h>
 #include <scheduler.h>
 #include <acpi.h>
 
 void thread_function()
 {
-    char *p = 0xDEADBEEF;
-    while (1)
-        p[0] = 1;
+    while (1);
 }
 
 void kmain(uint64_t multiboot_magic, void *multiboot_data)
