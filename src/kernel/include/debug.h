@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #define debug(...) debug_printf(__VA_ARGS__)
 #define debug_info(...)      \
     do                       \
