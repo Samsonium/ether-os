@@ -1,5 +1,6 @@
 #include <memory.h>
 #include <vga.h>
+#include <keyboard.h>
 #include <debug.h>
 #include <multiboot.h>
 #include <cpu.h>
@@ -16,6 +17,7 @@ void thread_function()
 
 void kmain(uint64_t multiboot_magic, void *multiboot_data)
 {
+    keyboard_init();
     vga_init();
     debug_info("Kernel loaded\n");
 
