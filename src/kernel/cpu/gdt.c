@@ -50,7 +50,7 @@ struct gdt BootGDT[] = {
 
 struct gdtp GDTp = {2 * 8 - 1, BootGDT};
 
-void gdt_init(struct cpu *c)
+void gdt_init(cpu_t *c)
 {
     struct gdt *gdt = (void *)c->gdt;
     memcpy(gdt, BootGDT, sizeof(BootGDT));
