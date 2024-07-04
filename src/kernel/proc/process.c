@@ -74,7 +74,7 @@ void scheduler()
 
 void start_scheduler()
 {
-    struct process *sched = P2V(pmm_calloc());
+    struct process *sched = csched = P2V(pmm_calloc());
     sched->pid = (uint64_t)-1;
     sched->stack_ptr = incptr(sched, PAGE_SIZE - sizeof(struct swtch_stack) + sizeof(registers));
     sched->P4 = kernel_P4;
