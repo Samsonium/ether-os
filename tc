@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Variables
+tc_image='ether-toolchain'
+build_dir=$(pwd)
+
+# Ask to build toolchain if it's not built yet
+if [[ ! $(docker image ls -q -f name=${tc_image}) ]]; then
+  echo 'Docker image does not exists. Do you want to build it? '
+  read -r -p "(y/N): " response
+
+  case "$response" in
+    [Yy])
+      echo "Building toolchain"
+      if ! docker build -t ${tc_image} ${build_dir}/toolchain; then
+        echo 'Toolchain build error ;('
+        exit 0
+      fi
+      ;;
+    *)
+      echo 'Cancel'
+      exit 0
+      ;;
+  esac
+fi
+
+# Execute command
+if [[ $(docker ps -q -f name=${tc_image}-run) ]]; then
+  docker exec -it -u "$(id -u):$(id -g)" ${tc_image}-run "$@"
+else
+  docker run -it -p 5900:5900 --rm -v "${build_dir}:/opt" --name ${tc_image}-run -u "$(id -u):$(id -g)" ${tc_image} "$@"
+fi
