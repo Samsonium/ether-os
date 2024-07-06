@@ -3,16 +3,16 @@
 # Install packages for toolchain
 apk --update add build-base
 apk add gmp-dev mpfr-dev mpc1-dev texinfo
-apk add make
+apk add make cmake
 apk add grub-bios xorriso
-apk add gdb
+apk add gdb nasm git
 
 # Install QEMU
-apk --update add qemu-system-i386 --repository https://dl-cdn.alpinelinux.org/alpine/v3.20/main/
+apk --update add qemu-system-x86_64 --repository https://dl-cdn.alpinelinux.org/alpine/v3.20/main/
 rm -rf /var/cache/apk/*
 
 # Variables
-target='i386-elf'
+target='x86_64-elf'
 binutils='binutils-2.40'
 gcc='gcc-14.1.0'
 
