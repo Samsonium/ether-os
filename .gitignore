@@ -9,5 +9,6 @@
 !/GNUmakefile
 !/limine.cfg
 !/linker.ld
+!/README.md
 !/tc
 !/vnc.sh
