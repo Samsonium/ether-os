@@ -1,8 +1,12 @@
 /*
 
 # Dirs
+!/src
 !/toolchain
 
 # Files
 !/.gitignore
+!/GNUmakefile
+!/limine.cfg
+!/linker.ld
 !/tc
