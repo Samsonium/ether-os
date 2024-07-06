@@ -5,6 +5,6 @@ RUN /opt/build.sh
 
 ENV PATH "/opt/toolchain:$PATH"
 ENV ETHER "true"
-ENV MAINDIR "/opt"
+ENV BUILDDIR "/opt"
 
 WORKDIR /opt
