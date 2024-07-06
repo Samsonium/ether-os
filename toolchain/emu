@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+if [ ! ${ETHER+x} ]; then
+	echo 'Error: unsupported environment'
+fi
+
+echo 'Running emulator with VNC server at vnc://localhost:5900'
+qemu-system-x86_64 -cdrom ether.iso -vnc :0
