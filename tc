@@ -26,7 +26,7 @@ fi
 
 # Execute command
 if [[ $(docker ps -q -f name=${tc_image}-run) ]]; then
-  docker exec -it -u "$(id -u):$(id -g)" ${tc_image}-run "$@"
+  docker exec -i -u "$(id -u):$(id -g)" ${tc_image}-run "$@"
 else
-  docker run -it -p 5900:5900 --rm -v "${build_dir}:/opt" --name ${tc_image}-run -u "$(id -u):$(id -g)" ${tc_image} "$@"
+  docker run -i -p 5900:5900 --rm -v "${build_dir}:/opt" --name ${tc_image}-run -u "$(id -u):$(id -g)" ${tc_image} "$@"
 fi
