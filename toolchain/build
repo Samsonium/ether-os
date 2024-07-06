@@ -1,0 +1,43 @@
+#!/bin/sh -e
+
+if [ -z ${ETHER+x} ]; then >&2 echo 'Error! Unsupported environment'; exit 1; fi
+
+# Make kernel
+echo 'Compiling kernel'
+if ! make; then
+  echo 'Kernel compiled with errors'
+else
+  echo 'Kernel compiled successfully'
+fi
+
+# Clone Limine if not
+if [ ! -d "$(pwd)/limine" ]; then
+  echo 'Limine is not cloned yet. Cloning'
+  git clone https://github.com/limine-bootloader/limine.git --branch=v7.x-binary --depth=1
+  make -C limine
+fi;
+
+# Creating iso_root dir
+mkdir -p iso_root
+
+# Copy relevant files
+mkdir -p iso_root/boot
+mkdir -p iso_root/boot/limine
+cp -v bin/ether_os iso_root/boot/
+cp -v limine.cfg limine/limine-bios.sys limine/limine-bios-cd.bin \
+      limine/limine-uefi-cd.bin iso_root/boot/limine/
+
+# Create EFI boot tree and copy Limine's EFI executables
+mkdir -p iso_root/EFI/BOOT
+cp -v limine/BOOTX64.EFI iso_root/EFI/BOOT/
+cp -v limine/BOOTIA32.EFI iso_root/EFI/BOOT/
+
+# Create bootable ISO
+xorriso -as mkisofs -b boot/limine/limine-bios-cd.bin \
+        -no-emul-boot -boot-load-size 4 -boot-info-table \
+        --efi-boot boot/limine/limine-uefi-cd.bin \
+        -efi-boot-part --efi-boot-image --protective-msdos-label \
+        iso_root -o ether.iso
+
+# Install Limine stage 1 and 2 for legacy BIOS boot
+./limine/limine bios-install ether.iso
