@@ -1,14 +1,3 @@
 /*
 
-# Dirs
-!/docs
-!/boot
-!/kernel
-
-# Files
-!/.gitignore
-!/Makefile
-!/README.md
-
-# Exclude .o
-/**/*.o
+!.gitignore
