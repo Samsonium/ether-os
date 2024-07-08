@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+if [ $(whereis ether | awk '{print($2)}') ]; then
+  echo Found executable, continue
+else
+  echo Cannot find \"ether\" executable. Run \"sudo ./setup\" first
+  exit 1
+fi
+
+image=ether-toolchain
+br="$(dirname "$(readlink -f ether)")"
+echo $br
+
+# Ask to build docker image if not found
+if [[ ! $(docker image ls -q -f reference=${image}) ]]; then
+  echo "Docker image does not exist. Do you want to build it?"
+  read -r -p "[y/N]: " response
+  case "$response" in
+    [Yy][Ee][Ss]|[Yy])
+      docker build -t ${image} ${br}/toolchain
+      ;;
+    *)
+      exit
+      ;;
+  esac
+fi
+
+# Execute
+if [[ $(docker ps -q -f name=${image}-run) ]]; then
+  docker exec -it -u $(id -u):$(id -g) ${image}-run "$@"
+else
+  docker run -it -p 5900:5900 --rm -v ${br}:/opt --name ${image}-run -u $(id -u):$(id -g) ${image} "$@"
+fi

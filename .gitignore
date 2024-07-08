@@ -1,14 +1,16 @@
 /*
 
 # Dirs
-!/docs
-!/boot
-!/kernel
+!/src
+!/toolchain
 
 # Files
 !/.gitignore
+!/ether
 !/Makefile
-!/README.md
+!/setup
 
-# Exclude .o
-/**/*.o
+# Additional exclude
+*.o
+*.d
+*.bin

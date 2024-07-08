@@ -1,0 +1,19 @@
+#!/bin/sh -e
+
+if [ -z ${ISETHER+x} ]; then >&2 echo "Error! Unsupported environment"; exit 1; fi
+
+sysroot=${BUILDROOT}/sysroot
+iso=${BUILDROOT}/ether64.iso
+
+mkdir -p ${sysroot}/boot/grub
+cat > ${sysroot}/boot/grub/grub.cfg << EOF
+set timeout=1
+set default=0
+
+menuentry "Ether OS" {
+  multiboot2 /kernel.bin
+}
+
+EOF
+
+grub-mkrescue -o ${iso} ${sysroot}
