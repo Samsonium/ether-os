@@ -12,7 +12,7 @@ if [[ ! $(docker image ls -q -f reference=${tc_image}) ]]; then
   case "$response" in
     [Yy])
       echo "Building toolchain"
-      if ! docker build -t ${tc_image} ${build_dir}/toolchain; then
+      if ! docker build --progress plain -t ${tc_image} ${build_dir}/toolchain; then
         echo 'Toolchain build error ;('
         exit 0
       fi

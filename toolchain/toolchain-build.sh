@@ -26,7 +26,7 @@ mkdir binutils-build && cd binutils-build
     --disable-nls \
     --disable-werror \
     --with-sysroot
-make -j 8
+make -j 6
 make install
 
 # Build gcc
@@ -39,7 +39,7 @@ mkdir gcc-build && cd gcc-build
     --disable-nls \
     --enable-languages=c,c++ \
     --without-headers
-make -j 8 all-gcc all-target-libgcc
+make -j 6 all-gcc all-target-libgcc
 make install-gcc install-target-libgcc
 
 ##
