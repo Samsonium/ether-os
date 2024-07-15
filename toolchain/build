@@ -6,6 +6,7 @@ if [ -z ${ETHER+x} ]; then >&2 echo 'Error! Unsupported environment'; exit 1; fi
 echo 'Compiling kernel'
 if ! make; then
   echo 'Kernel compiled with errors'
+  exit 1
 else
   echo 'Kernel compiled successfully'
 fi
