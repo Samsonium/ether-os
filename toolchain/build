@@ -4,12 +4,21 @@ if [ -z ${ETHER+x} ]; then >&2 echo 'Error! Unsupported environment'; exit 1; fi
 
 # Make kernel
 echo 'Compiling kernel'
-if ! make; then
-  echo 'Kernel compiled with errors'
+mkdir -p build
+mkdir -p obj
+cd build
+if ! cmake ..; then
+  echo 'CMake finished with errors'
   exit 1
 else
-  echo 'Kernel compiled successfully'
+  if ! make; then
+    echo "Error while compiling kernel"
+    exit 1
+  else
+    echo 'Kernel compiled successfully'
+  fi
 fi
+cd ..
 
 # Clone Limine if not
 if [ ! -d "$(pwd)/limine" ]; then

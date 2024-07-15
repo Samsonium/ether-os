@@ -6,7 +6,7 @@
 
 # Files
 !/.gitignore
-!/GNUmakefile
+!/CMakeLists.txt
 !/limine.cfg
 !/linker.ld
 !/README.md
