@@ -1,16 +1,4 @@
 /*
 
 # Dirs
-!/src
-!/toolchain
-
-# Files
-!/.gitignore
-!/ether
-!/Makefile
-!/setup
-
-# Additional exclude
-*.o
-*.d
-*.bin
+!/.idea
